@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>icons/icons8-коробка-32.png</file>
+        <file>icons/icons8-удалить-32.png</file>
+        <file>icons/icons8-файл-32.png</file>
+    </qresource>
+</RCC>
