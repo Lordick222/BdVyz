@@ -3,6 +3,9 @@
 
 #include <QMainWindow>
 #include <QStandardItemModel>
+#include <QFile>
+#include <QTextStream>
+
 
 namespace Ui {
 class MainWindow;
@@ -20,6 +23,9 @@ public:
     void addToTableS();
     QStandardItemModel *tablestud;
     QStandardItemModel *tableprepod;
+    void save();
+    void load();
+    void closeEvent(QCloseEvent *event);
 
 
 
@@ -37,6 +43,8 @@ private slots:
     void on_action_2_triggered();
 
     void on_pushButton_2_clicked();
+
+    void on_actionInfo_triggered();
 
 private:
     Ui::MainWindow *ui;
@@ -67,6 +75,7 @@ void setMultiMap(int a,int b);
 
 bool checkpair(int a,int b);
 
-
+void save();
+void load();
 
 #endif // MAINWINDOW_H

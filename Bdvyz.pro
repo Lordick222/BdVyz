@@ -32,7 +32,8 @@ SOURCES += \
     prepod.cpp \
     student.cpp \
     addprepod.cpp \
-    addstudkyrs.cpp
+    addstudkyrs.cpp \
+    info.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -41,13 +42,15 @@ HEADERS += \
     prepod.h \
     student.h \
     addprepod.h \
-    addstudkyrs.h
+    addstudkyrs.h \
+    info.h
 
 FORMS += \
         mainwindow.ui \
     addstudentwindow.ui \
     addprepod.ui \
-    addstudkyrs.ui
+    addstudkyrs.ui \
+    info.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

@@ -33,17 +33,15 @@ void AddStudKyrs::on_pushButton_clicked()
         {
             if(checkpair(getnumbered(),i))
             {
-                QMessageBox::about(this,"","Студент уже добавлен на курс");
+                QMessageBox::about(this,"Info","Студент уже добавлен на курс");
             }
             else
             {
                 setMultiMap(getnumbered(),i);
-                QMessageBox::about(this,"","Студент добавлен на курс");
+                QMessageBox::about(this,"Info","Студент добавлен на курс");
                 QWidget::close();
                 break;
             }
         }
     }
-     //QMessageBox::about(this,"","Студент добавлен на курс");
-     //QWidget::close();
 }

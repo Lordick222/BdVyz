@@ -16,6 +16,7 @@
 #include <QMultiMap>
 #include <QMap>
 #include <QCloseEvent>
+#include <QTextCodec>
 #include "student.h"
 #endif // HEADER_H
 

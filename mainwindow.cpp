@@ -3,9 +3,12 @@
 #include "addstudentwindow.h"
 #include "addprepod.h"
 #include "addstudkyrs.h"
+#include "info.h"
 #include "header.h"
 #include "prepod.h"
 #include "student.h"
+#include <QByteArray>
+
 
 
 int numberred;
@@ -20,11 +23,16 @@ QMultiMap <Prepod*, Student*> myMultimap;
 Prepod *prepodselect;
 
 
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    ui->setupUi(this);                                                                                          //table of student
+    QTextCodec::setCodecForLocale( QTextCodec::codecForName( "UTF-8" ) );
+    ui->setupUi(this);
+    ui->lineEdit->setReadOnly(true);
+    ui->lineEdit->setText("Студенты обучающиеся у преподавателя");
+    ui->lineEdit->setAlignment(Qt::AlignCenter);
     ui->tableViewStudent->setRowCount(0);
     ui->tableViewStudent->setColumnCount(3);
     ui->tableViewStudent->setHorizontalHeaderLabels(QStringList() << "Ф.И.О" << "Стипендия" << "Дата рождения");
@@ -33,24 +41,22 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->tableViewStudent->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->tableViewStudent, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slotCustomMenuRequested(QPoint)));
 
-
-
-        ui->tableViewPrepod->setRowCount(0);
-        ui->tableViewPrepod->setColumnCount(3);
-        ui->tableViewPrepod->setHorizontalHeaderLabels(QStringList() << "Ф.И.О" << "Ученная степень" << "Зарплата");
-        ui->tableViewPrepod->horizontalHeader()->setStretchLastSection(true);
-        ui->tableViewPrepod->setEditTriggers(QAbstractItemView::NoEditTriggers);
-        ui->tableViewPrepod->setContextMenuPolicy(Qt::CustomContextMenu);
-        connect(ui->tableViewPrepod, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(showtableStud()));
-        connect(ui->tableViewPrepod, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slotCustomMenuRequested(QPoint)));
+    ui->tableViewPrepod->setRowCount(0);
+    ui->tableViewPrepod->setColumnCount(3);
+    ui->tableViewPrepod->setHorizontalHeaderLabels(QStringList() << "Ф.И.О" << "Ученная степень" << "Зарплата");
+    ui->tableViewPrepod->horizontalHeader()->setStretchLastSection(true);
+    ui->tableViewPrepod->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    ui->tableViewPrepod->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(ui->tableViewPrepod, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(showtableStud()));
+    connect(ui->tableViewPrepod, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slotCustomMenuRequested(QPoint)));
                                                                                                 //table of student
-        ui->tableWidget->setRowCount(0);
-        ui->tableWidget->setColumnCount(3);
-        ui->tableWidget->setHorizontalHeaderLabels(QStringList() << "Ф.И.О" << "Стипендия" << "Дата рождения");
-        ui->tableWidget->horizontalHeader()->setStretchLastSection(true);
-        ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
-        ui->tableWidget->setContextMenuPolicy(Qt::CustomContextMenu);
-        connect(ui->tableWidget, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slotCustomMenuRequested(QPoint)));
+    ui->tableWidget->setRowCount(0);
+    ui->tableWidget->setColumnCount(3);
+    ui->tableWidget->setHorizontalHeaderLabels(QStringList() << "Ф.И.О" << "Стипендия" << "Дата рождения");
+    ui->tableWidget->horizontalHeader()->setStretchLastSection(true);
+    ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    ui->tableWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(ui->tableWidget, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slotCustomMenuRequested(QPoint)));
 }
 
 
@@ -185,7 +191,9 @@ void MainWindow::slotRemoveRecord()
                         }
                 }
                 myMultimap.remove(prepodselect,studentdel[row]);
+                key2=0;
                 showtableStud();
+                key2=1;
             }
          }
 
@@ -240,13 +248,13 @@ void MainWindow::showtableStud()
                     checkBox->setEnabled(false);
                     ui->tableWidget->setCellWidget(i,1, checkBoxWidget);
                     QString g;
-                    int i1 = student[i]->getbirthday()/1000000;
+                    int i1 = itMultimap.value()->getbirthday()/1000000;
                     g = QString::number(i1);
                     g.append(".");
-                    int i2 = ((student[i]->getbirthday())-(i1*1000000))/10000;
+                    int i2 = ((itMultimap.value()->getbirthday())-(i1*1000000))/10000;
                     g.append(QString::number(i2));
                     g.append(".");
-                    int i3 = ((student[i]->getbirthday())-(i1*1000000))-i2*10000;
+                    int i3 = ((itMultimap.value()->getbirthday())-(i1*1000000))-i2*10000;
                     g.append(QString::number(i3));
                     QTableWidgetItem *c = new QTableWidgetItem(tr("%1").arg(g));
                     ui->tableWidget->setItem(i,2,c);
@@ -289,7 +297,27 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
-
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+        event->ignore();
+        if (QMessageBox::Yes == QMessageBox::warning(this, "Закрыть?",
+                              "Уверены?",
+                              QMessageBox::Yes|QMessageBox::No))
+        {
+        event->accept();
+        if (QMessageBox::warning(this,
+                                  ("Закрыть?"),
+                                  ("Сохранить базу данных перед выходом?"),
+                                  QMessageBox::Yes | QMessageBox::No) == QMessageBox::No)
+         {
+             return;
+         }
+         else
+         {
+             save();
+         }
+        }
+}
 
 void MainWindow::on_pushButton_clicked()
 {
@@ -386,15 +414,10 @@ void redPrepod(QString name1, QString academic1 ,  int salary1, int a)
 }
 
 
-void MainWindow::on_action_triggered()
-{
-    QString open = QFileDialog::getOpenFileName();
-
-}
-
 void MainWindow::on_action_2_triggered()
 {
-    QString save = QFileDialog::getSaveFileName();
+
+    load();
 }
 
 void MainWindow::on_pushButton_2_clicked()
@@ -440,4 +463,107 @@ bool checkpair(int a,int b)
                 }
             }
     return 0;
+}
+
+void MainWindow::save()
+{
+    QFile fileOut("fileout.txt");
+    if(fileOut.open(QIODevice::WriteOnly | QIODevice::Text))
+    {
+            QTextStream writeStream(&fileOut);
+            writeStream << sizestudent << "\n";
+            writeStream << sizeprepod << "\n";
+            for(int i=0;i<sizestudent;i++)
+            {
+                writeStream << student[i]->getname() << "\n";
+                writeStream << student[i]->getscholarship() << "\n";
+                writeStream << student[i]->getbirthday() << "\n";
+            }
+            for(int i=0;i<sizeprepod;i++)
+            {
+                writeStream << prepod[i]->getname() << "\n";
+                writeStream << prepod[i]->getacademic()<< "\n";
+                writeStream << prepod[i]->getsalary()<< "\n";
+            }
+            writeStream << myMultimap.size() << "\n";
+                auto itMultimap = myMultimap.begin();
+                for (itMultimap = myMultimap.begin(); itMultimap != myMultimap.end(); itMultimap++)
+                {
+                    for(int i=0;i<sizeprepod;i++)
+                    {
+                        if(prepod[i]==itMultimap.key())
+                        {
+                            writeStream << i<< "\n";
+                            break;
+                        }
+                    }
+                    for(int i=0;i<sizestudent;i++)
+                    {
+                        if(student[i]==itMultimap.value())
+                        {
+                            writeStream << i<< "\n";
+                            break;
+                        }
+                    }
+                  }
+            fileOut.close();
+            QMessageBox::about(this,"Info","База данных сохранена");
+    }
+}
+
+void MainWindow::load()
+{
+    QFile filein("fileout.txt");
+    if(filein.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+       student.clear();
+       prepod.clear();
+       sizestudent= (filein.readLine().toInt());
+       sizeprepod= (filein.readLine().toInt());
+       for(int i=0;i<sizestudent;i++)
+       {
+           student.push_back(new Student);
+           student[i]->setname((filein.readLine()).trimmed());
+           student[i]->setscholarship(filein.readLine().toInt());
+           student[i]->setbirthday(filein.readLine().toInt());
+       }
+       for(int i=0;i<sizeprepod;i++)
+       {
+           prepod.push_back(new Prepod);
+           prepod[i]->setname(filein.readLine().trimmed());
+           prepod[i]->setacademic(filein.readLine().trimmed());
+           prepod[i]->setsalary(filein.readLine().toInt());
+       }
+       int a = filein. readLine().toInt();
+       int x;
+       int y;
+       myMultimap.clear();
+       for(int i=0;i<a;i++)
+       {
+           x = filein.readLine().toInt();
+           y=filein.readLine().toInt();
+           myMultimap.insert(prepod[x],student[y]);
+       }
+    }
+    filein.close();
+    QMessageBox::about(this,"Info","База данных загружена");
+    ui->tableViewPrepod->setRowCount(sizeprepod);
+    ui->tableViewStudent->setRowCount(sizestudent);
+    addToTable();
+    addToTableS();
+    key2=0;
+    showtableStud();
+    key2=1;
+}
+
+void MainWindow::on_action_triggered()
+{
+    save();
+}
+
+void MainWindow::on_actionInfo_triggered()
+{
+     info a1;
+     a1.setModal(true);
+     a1.exec();
 }

@@ -49,24 +49,7 @@
        <widget class="QTableWidget" name="tableWidget"/>
       </item>
       <item>
-       <widget class="QLabel" name="label">
-        <property name="font">
-         <font>
-          <pointsize>12</pointsize>
-          <weight>50</weight>
-          <bold>false</bold>
-         </font>
-        </property>
-        <property name="frameShape">
-         <enum>QFrame::NoFrame</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Sunken</enum>
-        </property>
-        <property name="text">
-         <string>Студенты обучающиеся у педагога</string>
-        </property>
-       </widget>
+       <widget class="QLineEdit" name="lineEdit"/>
       </item>
      </layout>
     </item>
@@ -85,8 +68,9 @@
     <property name="title">
      <string>Vyz</string>
     </property>
-    <addaction name="action"/>
     <addaction name="action_2"/>
+    <addaction name="action"/>
+    <addaction name="actionInfo"/>
    </widget>
    <addaction name="menuVyz"/>
   </widget>
@@ -97,26 +81,34 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="action"/>
    <addaction name="action_2"/>
+   <addaction name="action"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <action name="action">
-   <property name="icon">
-    <iconset resource="resources.qrc">
-     <normaloff>:/icons/icons/icons8-файл-32.png</normaloff>:/icons/icons/icons8-файл-32.png</iconset>
-   </property>
-   <property name="text">
-    <string>Загрузить базу данных</string>
-   </property>
-  </action>
   <action name="action_2">
    <property name="icon">
     <iconset resource="resources.qrc">
      <normaloff>:/icons/icons/icons8-коробка-32.png</normaloff>:/icons/icons/icons8-коробка-32.png</iconset>
    </property>
    <property name="text">
-    <string>Сохранить базу данных</string>
+    <string>Загрузить</string>
+   </property>
+   <property name="toolTip">
+    <string>Загрузить</string>
+   </property>
+  </action>
+  <action name="action">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/icons/icons8-файл-32.png</normaloff>:/icons/icons/icons8-файл-32.png</iconset>
+   </property>
+   <property name="text">
+    <string>Сохранить</string>
+   </property>
+  </action>
+  <action name="actionInfo">
+   <property name="text">
+    <string>Info</string>
    </property>
   </action>
  </widget>

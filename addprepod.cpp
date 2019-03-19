@@ -52,6 +52,11 @@ void AddPrepodWindow::on_pushButton_2_clicked()
     switch(getkey())
     {
         case 0:{
+        if(ui->lineEdit->text()==""||ui->lineEdit_2->text()=="")
+        {
+            QMessageBox::about(this,"Info","Поля незаполненны");
+            break;
+        }
             MainWindow one;
             setPrepod(ui->lineEdit->text(),ui->comboBox->currentText(),(ui->lineEdit_2->text()).toInt());
             QMessageBox::about(this,"","Преподаватель добавлен");
@@ -59,6 +64,11 @@ void AddPrepodWindow::on_pushButton_2_clicked()
             break;
         }
         case 1:{
+        if(ui->lineEdit->text()==""||ui->lineEdit_2->text()=="")
+        {
+            QMessageBox::about(this,"Info","Поля незаполненны");
+            break;
+        }
             redPrepod(ui->lineEdit->text(),ui->comboBox->currentText(),(ui->lineEdit_2->text()).toInt(), getnumbered());
             QMessageBox::about(this,"","Преподаватель отредактирован");
             QWidget::close();

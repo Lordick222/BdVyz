@@ -73,23 +73,34 @@ void AddStudentWindow::on_pushButton_2_clicked()
     switch(getkey())
     {
         case 0:{
-            MainWindow one;
-            bool x = 0;
-            if(ui->checkBox->isChecked())
+            if(ui->lineEdit->text()=="")
             {
-                x=1;
+                QMessageBox::about(this,"info","Поля незаполненны");
+                break;
             }
-            else
-            {
-                x=0;
-            }
-            int i = (ui->comboBox->currentText().toInt())*1000000+(ui->comboBox_2->currentText().toInt())*10000+(ui->comboBox_3->currentText().toInt());
-            setStudent(ui->lineEdit->text(),x,i);
-            QMessageBox::about(this,"","Студент добавлен");
-            QWidget::close();
-            break;
+                MainWindow one;
+                bool x = 0;
+                if(ui->checkBox->isChecked())
+                {
+                    x=1;
+                }
+                else
+                {
+                    x=0;
+                }
+                int i = (ui->comboBox->currentText().toInt())*1000000+(ui->comboBox_2->currentText().toInt())*10000+(ui->comboBox_3->currentText().toInt());
+                setStudent(ui->lineEdit->text(),x,i);
+                QMessageBox::about(this,"Info","Студент добавлен");
+                QWidget::close();
+                break;
+
         }
         case 1:{
+        if(ui->lineEdit->text()=="")
+        {
+            QMessageBox::about(this,"Info","Поля незаполненны");
+            break;
+        }
             MainWindow one;
             bool x = 0;
             if(ui->checkBox->isChecked())
@@ -102,9 +113,10 @@ void AddStudentWindow::on_pushButton_2_clicked()
             }
             int i = (ui->comboBox->currentText().toInt())*1000000+(ui->comboBox_2->currentText().toInt())*10000+(ui->comboBox_3->currentText().toInt());
             redStudent(ui->lineEdit->text(),x,i,getnumbered());
-            QMessageBox::about(this,"","Студент отредактирован");
+            QMessageBox::about(this,"Info","Студент отредактирован");
             QWidget::close();
             break;
-    }
+        }
+
     }
 }
